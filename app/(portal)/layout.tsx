@@ -1,6 +1,7 @@
 import { PortalHeader } from "./_components/portal-header";
 import { PortalSidebar } from "./_components/portal-sidebar";
 import { OnboardingGate } from "@/components/onboarding/onboarding-gate";
+import { ScrollContainer } from "@/components/ui/scroll-container";
 
 export default function PortalLayout({
   children,
@@ -16,9 +17,9 @@ export default function PortalLayout({
         <div className="col-start-2 row-start-1">
           <PortalHeader />
         </div>
-        <div className="col-start-2 row-start-2 min-h-0 overflow-y-auto border border-edge/40 rounded-tl-[9px] bg-surface">
+        <ScrollContainer className="col-start-2 row-start-2 min-h-0 overflow-y-auto border border-edge/40 rounded-tl-[9px] bg-surface">
           <OnboardingGate>{children}</OnboardingGate>
-        </div>
+        </ScrollContainer>
       </div>
     </div>
   );

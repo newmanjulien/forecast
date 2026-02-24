@@ -61,7 +61,7 @@ export function Pagination({
             <span
               key={page}
               aria-current="page"
-              className="rounded-full border border-ink/20 bg-ink/10 px-3 py-1 text-xs text-ink"
+              className="rounded-full bg-ink/10 px-3 py-1 text-xs text-ink"
             >
               {page}
             </span>

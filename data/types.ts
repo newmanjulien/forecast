@@ -102,47 +102,28 @@ export type NamedLogo = {
   logo: string;
 };
 
-export type InternalAuditSignal = {
+export type PreviewSignal = {
   id: string;
   title: string;
   summary: string;
   sources: NamedLogo[];
 };
 
-export type InternalAuditReportPoint = {
-  date: string;
-  values: Record<string, number>;
-  profitRatio?: Record<string, number>;
-};
-
-export type InternalAuditReportCategory = {
-  key: string;
-  label: string;
-  color: string;
-};
-
-export type InternalAuditReport = {
+export type PreviewReport = {
   id: string;
   title: string;
   subtitle: string;
-  rangeLabel: string;
-  xLabel: string;
-  yLabel: string;
-  legendLabel: string;
-  categories: InternalAuditReportCategory[];
-  data: InternalAuditReportPoint[];
-  yMax?: number;
 };
 
-export type InternalAuditQuadrantPoint = {
+export type PreviewQuadrantPoint = {
   id: string;
   label: string;
   x: number;
   y: number;
-  color: string;
+  description: string;
 };
 
-export type InternalAuditQuadrantChart = {
+export type PreviewQuadrantChart = {
   id: string;
   title: string;
   subtitle: string;
@@ -150,5 +131,5 @@ export type InternalAuditQuadrantChart = {
   yLabel: string;
   xMid: number;
   yMid: number;
-  points: InternalAuditQuadrantPoint[];
+  points: PreviewQuadrantPoint[];
 };

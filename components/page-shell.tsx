@@ -7,7 +7,7 @@ export function PageShell({
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
   return (
-    <main className={cn("min-h-screen bg-surface", className)} {...props}>
+    <main className={cn("bg-surface", className)} {...props}>
       {children}
     </main>
   );

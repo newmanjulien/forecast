@@ -82,6 +82,25 @@ main {
   background: #c3cbd6;
 }
 
+.scrollbar-auto {
+  scrollbar-gutter: stable;
+  scrollbar-width: none;
+}
+
+.scrollbar-auto::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.scrollbar-auto.is-scrolling {
+  scrollbar-width: thin;
+}
+
+.scrollbar-auto.is-scrolling::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
 ::selection {
   background-color: #ffffcc;
 }
