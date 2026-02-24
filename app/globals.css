@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .bg-chart-units {
+    background-color: var(--chart-units);
+  }
+  .bg-chart-price {
+    background-color: var(--chart-price);
+  }
+  .bg-chart-attach {
+    background-color: var(--chart-attach);
+  }
+  .bg-chart-arppu {
+    background-color: var(--chart-arppu);
+  }
+  .opacity-65 {
+    opacity: 0.65;
+  }
+}
+
+:root {
+  --ink: 24 30 41;
+  --muted: 106 113 123;
+  --panel: 255 255 255;
+  --edge: 232 234 237;
+  --accent: 24 30 41;
+  --accent-2: 120 128 138;
+  --sand: 244 245 247;
+  --glow: 238 240 243;
+  --surface: 250 250 250;
+  --chart-units: #3a7bbf;
+  --chart-price: #2f9aa4;
+  --chart-attach: #2b3540;
+  --chart-arppu: #7c8ea6;
+}
+
+html {
+  font-size: 90%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: rgb(var(--ink));
+  background: rgb(var(--surface));
+  font-family: var(--font-sans), ui-sans-serif, system-ui;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  font-weight: inherit;
+  line-height: 1.5;
+}
+
+main {
+  background-image: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eef0f3;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cfd6df;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c3cbd6;
+}
+
+::selection {
+  background-color: #ffffcc;
+}
+
+::-moz-selection {
+  background-color: #ffffcc;
+}
