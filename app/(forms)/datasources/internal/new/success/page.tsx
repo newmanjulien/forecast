@@ -10,8 +10,8 @@ export default function InternalDatasourceSuccessPage() {
     <FormPageLayout
       title="Datasource is queued"
       description="We will validate the connection and begin the first sync window within the next few hours."
-      onLogoClick={() => router.push("/")}
-      onPrimaryAction={() => router.push("/")}
+      onLogoClick={() => router.push("/market-audit")}
+      onPrimaryAction={() => router.push("/market-audit")}
       primaryActionText="Back to dashboard"
     >
       <div className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700">

@@ -10,8 +10,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Signal and Revenue Opportunity Console",
-  description: "Board view of market audit signals and revenue opportunities.",
+  title: "Overbase",
+  description: "Overbase portal",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

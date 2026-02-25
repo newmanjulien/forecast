@@ -9,29 +9,25 @@ import { Panel } from "@/components/ui/panel";
 import { Separator } from "@/components/ui/separator";
 import { getMarketAuditSignals } from "@/lib/market-audit";
 import { cn } from "@/lib/shared";
+import { getPagination } from "@/lib/shared/pagination";
 import type { Signal } from "@/data/types";
 
 const PAGE_SIZE = 5;
 
-export default async function HomePage({
+export default async function MarketAuditPage({
   searchParams,
 }: {
   searchParams?: Promise<{ page?: string | string[] }>;
 }) {
   const resolvedSearchParams = (await searchParams) ?? {};
   const signals = getMarketAuditSignals();
-  const totalPages = Math.max(1, Math.ceil(signals.length / PAGE_SIZE));
-  const rawPage = Array.isArray(resolvedSearchParams.page)
-    ? resolvedSearchParams.page[0]
-    : resolvedSearchParams.page;
-  const parsedPage = Number.parseInt(rawPage ?? "1", 10);
-  const currentPage = Number.isFinite(parsedPage)
-    ? Math.min(Math.max(parsedPage, 1), totalPages)
-    : 1;
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const { currentPage, totalPages, startIndex, rangeStart, rangeEnd } =
+    getPagination({
+      totalCount: signals.length,
+      pageSize: PAGE_SIZE,
+      pageParam: resolvedSearchParams.page,
+    });
   const visible = signals.slice(startIndex, startIndex + PAGE_SIZE);
-  const rangeStart = signals.length === 0 ? 0 : startIndex + 1;
-  const rangeEnd = startIndex + visible.length;
   const signalOwners = [
     { name: "Aditya Sharma", photo: "/avatars/aditya.jpg" },
     { name: "Yash Patel", photo: "/avatars/yash.webp" },
@@ -81,7 +77,7 @@ export default async function HomePage({
             <h1 className="text-3xl font-medium tracking-tight text-ink">
               Insight from our market audit
             </h1>
-            <p className="mt-3 max-w-2xl text-muted/80">
+            <p className="mt-3 max-w-2xl text-ink">
               Dig into signals discovered by our market audit. Click in to see
               potential revenue opportunities. These signals are found through
               your{" "}
@@ -142,7 +138,7 @@ export default async function HomePage({
               rangeStart={rangeStart}
               rangeEnd={rangeEnd}
               totalCount={signals.length}
-              basePath="/"
+              basePath="/market-audit"
             />
           </>
         )}

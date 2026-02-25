@@ -10,6 +10,7 @@ import {
   marketDatasourceSections,
   type MarketDatasource,
 } from "@/data/market-datasources";
+import { getPagination } from "@/lib/shared/pagination";
 
 const PAGE_SIZE = 3;
 
@@ -22,21 +23,13 @@ export default async function DatasourcesPage({
   const marketDatasources = marketDatasourceSections.flatMap(
     (section) => section.items,
   );
-  const totalPages = Math.max(
-    1,
-    Math.ceil(marketDatasources.length / PAGE_SIZE),
-  );
-  const rawPage = Array.isArray(resolvedSearchParams.page)
-    ? resolvedSearchParams.page[0]
-    : resolvedSearchParams.page;
-  const parsedPage = Number.parseInt(rawPage ?? "1", 10);
-  const currentPage = Number.isFinite(parsedPage)
-    ? Math.min(Math.max(parsedPage, 1), totalPages)
-    : 1;
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const { currentPage, totalPages, startIndex, rangeStart, rangeEnd } =
+    getPagination({
+      totalCount: marketDatasources.length,
+      pageSize: PAGE_SIZE,
+      pageParam: resolvedSearchParams.page,
+    });
   const visible = marketDatasources.slice(startIndex, startIndex + PAGE_SIZE);
-  const rangeStart = marketDatasources.length === 0 ? 0 : startIndex + 1;
-  const rangeEnd = startIndex + visible.length;
   const maintainers = [
     {
       name: "Aditya Sharma",

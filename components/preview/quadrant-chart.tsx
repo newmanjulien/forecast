@@ -10,8 +10,8 @@ import {
   CHART_DIMENSIONS,
   CHART_PADDING,
   getInnerSize,
-} from "@/lib/charts/layout";
-import { linearScale, ticksLinear } from "@/lib/charts/scales";
+} from "@/lib/shared/charts/layout";
+import { linearScale, ticksLinear } from "@/lib/shared/charts/scales";
 
 export function PreviewQuadrantChart({
   chart,
@@ -21,50 +21,68 @@ export function PreviewQuadrantChart({
   className?: string;
 }) {
   const inner = getInnerSize();
-  const [hoveredPoint, setHoveredPoint] = useState<PreviewQuadrantPoint | null>(null);
-  const [hoverPosition, setHoverPosition] = useState<{ x: number; y: number } | null>(
-    null
+  const [hoveredPoint, setHoveredPoint] = useState<PreviewQuadrantPoint | null>(
+    null,
   );
-  const [hoverBounds, setHoverBounds] = useState<{ width: number; height: number } | null>(
-    null
-  );
+  const [hoverPosition, setHoverPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [hoverBounds, setHoverBounds] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
   const svgRef = useRef<SVGSVGElement | null>(null);
 
-  const xForValue = linearScale(0, 100, CHART_PADDING.left, CHART_PADDING.left + inner.width);
-  const yForValue = linearScale(0, 100, CHART_PADDING.top + inner.height, CHART_PADDING.top);
+  const xForValue = linearScale(
+    0,
+    100,
+    CHART_PADDING.left,
+    CHART_PADDING.left + inner.width,
+  );
+  const yForValue = linearScale(
+    0,
+    100,
+    CHART_PADDING.top + inner.height,
+    CHART_PADDING.top,
+  );
 
   const ticks = ticksLinear(100, 4);
   const DISAGREE_THRESHOLD = 6;
   const defaultPoint = chart.points.find((point) => point.id === "q18");
 
   useEffect(() => {
-    if (hasInteracted || !defaultPoint) return;
-    const rect = svgRef.current?.getBoundingClientRect();
-    const width = rect?.width ?? CHART_DIMENSIONS.width;
-    const height = rect?.height ?? CHART_DIMENSIONS.height;
-    const xScale = linearScale(
-      0,
-      100,
-      CHART_PADDING.left,
-      CHART_PADDING.left + inner.width,
-    );
-    const yScale = linearScale(
-      0,
-      100,
-      CHART_PADDING.top + inner.height,
-      CHART_PADDING.top,
-    );
-    const x = xScale(defaultPoint.x);
-    const y = yScale(defaultPoint.y);
-
-    setHoveredPoint(defaultPoint);
-    setHoverBounds({ width, height });
-    setHoverPosition({
-      x: (x / CHART_DIMENSIONS.width) * width,
-      y: (y / CHART_DIMENSIONS.height) * height,
+    const svg = svgRef.current;
+    if (!svg || typeof ResizeObserver === "undefined") {
+      return;
+    }
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      const { width, height } = entry.contentRect;
+      setHoverBounds({ width, height });
     });
-  }, [defaultPoint?.id, hasInteracted, inner.height, inner.width]);
+    observer.observe(svg);
+    return () => observer.disconnect();
+  }, []);
+
+  const resolvedBounds = hoverBounds ?? {
+    width: CHART_DIMENSIONS.width,
+    height: CHART_DIMENSIONS.height,
+  };
+  const defaultHoverPosition = defaultPoint
+    ? {
+        x:
+          (xForValue(defaultPoint.x) / CHART_DIMENSIONS.width) *
+          resolvedBounds.width,
+        y:
+          (yForValue(defaultPoint.y) / CHART_DIMENSIONS.height) *
+          resolvedBounds.height,
+      }
+    : null;
+  const activePoint = hasInteracted ? hoveredPoint : (defaultPoint ?? null);
+  const activePosition = hasInteracted ? hoverPosition : defaultHoverPosition;
 
   const getPointColor = (point: PreviewQuadrantPoint) => {
     const isRight = point.x >= chart.xMid;
@@ -169,7 +187,8 @@ export function PreviewQuadrantChart({
             <g
               key={point.id}
               onMouseEnter={(event) => {
-                const rect = event.currentTarget.ownerSVGElement?.getBoundingClientRect();
+                const rect =
+                  event.currentTarget.ownerSVGElement?.getBoundingClientRect();
                 if (!rect) return;
                 setHoveredPoint(point);
                 setHoverPosition({
@@ -179,7 +198,8 @@ export function PreviewQuadrantChart({
                 setHoverBounds({ width: rect.width, height: rect.height });
               }}
               onMouseMove={(event) => {
-                const rect = event.currentTarget.ownerSVGElement?.getBoundingClientRect();
+                const rect =
+                  event.currentTarget.ownerSVGElement?.getBoundingClientRect();
                 if (!rect) return;
                 setHoverPosition({
                   x: event.clientX - rect.left,
@@ -228,27 +248,27 @@ export function PreviewQuadrantChart({
           </text>
         </svg>
 
-        {hoveredPoint && hoverPosition && hoverBounds && (
+        {activePoint && activePosition && (
           <ChartTooltip
-            title={`${hoveredPoint.label} deal`}
+            title={`${activePoint.label} deal`}
             rows={[
-              { label: "Current", value: `${hoveredPoint.x}%` },
-              { label: "Overbase", value: `${hoveredPoint.y}%` },
+              { label: "Current", value: `${activePoint.x}%` },
+              { label: "Overbase", value: `${activePoint.y}%` },
               {
                 label: "Gap",
-                value: `${hoveredPoint.y - hoveredPoint.x >= 0 ? "+" : ""}${
-                  hoveredPoint.y - hoveredPoint.x
+                value: `${activePoint.y - activePoint.x >= 0 ? "+" : ""}${
+                  activePoint.y - activePoint.x
                 } pts`,
               },
             ]}
             body={(() => {
-              const delta = hoveredPoint.y - hoveredPoint.x;
+              const delta = activePoint.y - activePoint.x;
               const absDelta = Math.abs(delta);
               if (absDelta <= DISAGREE_THRESHOLD) return undefined;
-              return hoveredPoint.description;
+              return activePoint.description;
             })()}
-            position={hoverPosition}
-            bounds={hoverBounds}
+            position={activePosition}
+            bounds={resolvedBounds}
             offset={{ x: 12, y: -92 }}
             width={320}
           />

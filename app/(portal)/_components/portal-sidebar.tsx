@@ -15,14 +15,13 @@ import { cn } from "@/lib/shared";
 const navItems = [
   { label: "Sales forecast", href: "/sales-forecast", disabled: false },
   { label: "Internal audit", href: "/internal-audit", disabled: false },
-  { label: "Market audit", href: "/", disabled: false },
+  { label: "Market audit", href: "/market-audit", disabled: false },
   { label: "Datasources", href: "/datasources", disabled: false },
 ];
 
 export function PortalSidebar() {
   const pathname = usePathname();
-  const isMarketAudit =
-    pathname === "/" || pathname.startsWith("/market-audit");
+  const isMarketAudit = pathname.startsWith("/market-audit");
   const isDatasources = pathname.startsWith("/datasources");
   const isInternalAudit = pathname.startsWith("/internal-audit");
   const isSalesForecast = pathname.startsWith("/sales-forecast");

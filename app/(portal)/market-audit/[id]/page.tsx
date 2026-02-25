@@ -31,7 +31,7 @@ export default async function MarketAuditDetailPage({
     <PageShell className="px-6 py-10">
       <PageContainer className="max-w-4xl gap-8">
         <div className="flex items-center justify-between">
-          <BackLink href="/">Back to list of signals</BackLink>
+          <BackLink href="/market-audit">Back to list of signals</BackLink>
         </div>
 
         <div className="flex flex-col gap-8">
